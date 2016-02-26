@@ -1,0 +1,18 @@
+{
+  "startingQuizz" : "Démarrage du Quizz !",
+  "requestedStartQuizz" : " a demandé à démarrer le Quizz",
+
+  "stoppingQuizz" : "Arrêt du Quizz !",
+  "requestedStopQuizz" : " a demandé à arrêter le Quizz",
+
+  "standByMessage": "ヽ(◉◡◔)ﾉ SALUT JE SUIS QUIZZBOT JE SUIS UN BOT POUR FAIRE DES QUIZZ ヽ(◉◡◔)ﾉ",
+
+  "startCommandMessage": "Faîtes !start pour lancer une partie !",
+
+  "langSet": "Langue changée en français !",
+  "availableLang" : "Langues disponibles : ",
+
+  "help_lang" : "La commande !lang permet de configurer la langue de ce bot.\nIl suffit de faire !lang <lang>\nLes langues disponibles sont :",
+
+  "error_setLang_missingParam": "Il faut un argument..."
+}

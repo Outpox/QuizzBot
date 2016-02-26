@@ -1,0 +1,18 @@
+{
+  "startingQuizz": "Starting Quizz !",
+  "requestedStartQuizz": " requested to start the Quizz",
+
+  "stoppingQuizz": "stoppingQuizz",
+  "requestedStopQuizz": "requestedStopQuizz",
+
+  "standByMessage": "ヽ(◉◡◔)ﾉ OLA I AM QUIZZBOT I AM LE BOT FOR LE QUIZZ HON HON BAGUETTO ヽ(◉◡◔)ﾉ",
+
+  "startCommandMessage": "Type !start to launch a game!",
+
+  "langSet": "Language set to english!",
+  "availableLang" : "Available languages: ",
+
+  "help_lang" : "!lang allows you to configure this bot's language.\nJust type !lang <lang>\nAvailable languages:",
+
+  "error_setLang_missingParam": "You need one argument..."
+}
