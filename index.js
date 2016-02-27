@@ -9,4 +9,4 @@ i18n.configure({
     directory: 'lang/'
 });
 
-new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#test-quizz'], ['../questions/airfrance.json']);
+new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#test-quizz'], ['../questions/airfrance.json'], {timeBetweenQuestion: 5000});

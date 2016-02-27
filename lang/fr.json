@@ -1,9 +1,9 @@
 {
   "startingQuizz" : "Démarrage du Quizz !",
-  "requestedStartQuizz" : " a demandé à démarrer le Quizz",
+  "requestedStartQuizz" : "%s a demandé à démarrer le Quizz",
 
   "stoppingQuizz" : "Arrêt du Quizz !",
-  "requestedStopQuizz" : " a demandé à arrêter le Quizz",
+  "requestedStopQuizz" : "%s a demandé à arrêter le Quizz",
 
   "standByMessage": "ヽ(◉◡◔)ﾉ SALUT JE SUIS QUIZZBOT JE SUIS UN BOT POUR FAIRE DES QUIZZ ヽ(◉◡◔)ﾉ",
 
@@ -14,5 +14,15 @@
 
   "help_lang" : "La commande !lang permet de configurer la langue de ce bot.\nIl suffit de faire !lang <lang>\nLes langues disponibles sont :",
 
-  "error_setLang_missingParam": "Il faut un argument..."
+  "error_setLang_missingParam": "Il faut un argument...",
+
+  "goodAnswer": "Bonne réponse de %s",
+
+  "questionTag": "[Question] ",
+  "answerTag": "[Réponse] ",
+  "questionInQuizz": "J'ai %s questions dans ma liste !",
+  "nextQuestionIn" : "Prochaine question dans %ss !",
+  "questionEndingIn": "Fin de la question dans %ss !",
+  "noGoodAnswer": "Personne n'a trouvé la bonne réponse !",
+  "noMoreQuestion" : "Il ne reste plus de questions à poser !"
 }

@@ -3,7 +3,10 @@
 const irc = require('irc');
 const i18n = require('i18n');
 const Question = require('./question.js');
+const User = require('./user.js');
 const Error = require('./error.js');
+
+var i = -1;
 
 class QuizzBot {
     /**
@@ -13,10 +16,23 @@ class QuizzBot {
      * @param botName {String} - The name of the bot
      * @param channels {String[]}- The channels you want the bot to connect to
      * @param questionDatabases {String[]} - The question databases you want to load
+     * @param options {Object} - An object of options to set
      */
-    constructor(server, port, ssl, botName, channels, questionDatabases) {
+    constructor(server, port, ssl, botName, channels, questionDatabases, options) {
+        options = options || {};
+        this.options = options || {};
+        this.options.questionDuration = options.questionDuration < 5000 ? 5000 : options.questionDuration || 20000;
+        this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
+        this.options.questionTag = options.questionTag || i18n.__('questionTag');
+        this.options.answerTag = options.answerTag || i18n.__('answerTag');
+
         this.questionFiles = questionDatabases;
         this.running = false;
+        this.currentQuestion = null;
+        this.currentTotalTimer = null;
+        this.currentEndingSoonTimer = null;
+        this.nextQuestionTimer = null;
+        this.questions = [];
         this.init(server, port, ssl, botName, channels);
     }
 
@@ -46,12 +62,16 @@ class QuizzBot {
                 console.log(options.username + ' connected.');
                 self.loadQuestions();
                 self.standByMessage();
-                self.ircBot.addListener('message', function (from, to, message) {
+                self.ircBot.addListener('message', (from, to, message) => {
+                    var user = User.getUser(from, to, message);
                     if (from !== botName && message.length > 1 && message.charAt(0) === '!') {
-                        self.handleCommand(from, to, message);
+                        self.handleCommand(user, to, message);
                     }
-                })
-            }, 50);
+                    else if (self.running && self.currentQuestion !== null && from !== botName && message.length > 1) {
+                        self.handleAnswer(user, to, message);
+                    }
+                });
+            }, 20);
         });
     }
 
@@ -61,7 +81,7 @@ class QuizzBot {
     loadQuestions() {
         var self = this;
         self.questions = [];
-        self.questionFiles.forEach((file) => {
+        self.questionFiles.forEach((file, i) => {
             //Right now it's only expected to be a json file. I'll handle .txt file later if ever.
             var db = require(file);
             db.forEach((q) => {
@@ -71,8 +91,39 @@ class QuizzBot {
         });
     }
 
-    game() {
+    game(user, to, message) {
+        var self = this;
 
+        i++;
+        if (i < self.questions.length) {
+            self.ircBot.say(to, irc.colors.wrap('orange', i18n.__('nextQuestionIn', self.options.timeBetweenQuestion / 1000)));
+            self.nextQuestionTimer = setTimeout(() => {
+                var q = self.questions[i];
+                self.currentQuestion = q;
+                q.askQuestion(self, to);
+                self.currentTotalTimer = setTimeout(() => {
+                    self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('noGoodAnswer')));
+                    self.currentQuestion.displayAnswer(self, to);
+                    self.clearGame();
+                    self.game(user, to, message);
+                }, self.options.questionDuration);
+
+                self.currentEndingSoonTimer = setTimeout(() => {
+                    self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('questionEndingIn', 5)));
+                }, self.options.questionDuration - 5000)
+
+            }, self.options.timeBetweenQuestion);
+        }
+        else {
+            self.stopCommand(null, to, message);
+        }
+    }
+
+    clearGame() {
+        var self = this;
+        self.currentQuestion = null;
+        clearTimeout(self.currentEndingSoonTimer);
+        clearTimeout(self.currentTotalTimer);
     }
 
     /**
@@ -118,73 +169,112 @@ class QuizzBot {
         var self = this;
         self.ircBot.opt.channels.forEach(chan => {
             self.ircBot.say(chan, irc.colors.wrap('light_red', i18n.__('standByMessage')));
+            self.ircBot.say(chan, irc.colors.wrap('gray', i18n.__('questionInQuizz', self.questions.length)));
             self.ircBot.say(chan, irc.colors.wrap('gray', i18n.__('startCommandMessage')));
         })
     }
 
     /**
      * The command dispatcher. Call the appropriate function depending on the command.
-     * @param from {String} - User who requested the command
+     * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
      */
-    handleCommand(from, to, message) {
+    handleCommand(user, to, message) {
         var self = this;
         var command = message.split(' ')[0];
         var args = message.split(' ');
         args.shift();
-        //console.log(command);
         switch (command) {
             case '!start':
-                self.startCommand(from, to, message);
+                self.startCommand(user, to, message);
                 break;
             case '!stop':
-                self.stopCommand(from, to, message);
+                self.stopCommand(user, to, message);
                 break;
             case '!lang':
-                self.langCommand(from, to, message, args);
+                self.langCommand(user, to, message, args);
                 break;
+            case '!say':
+                self.sayCommand(user, to, message, args);
+                break;
+            case '!test':
+                self.testCommand(user, to, message, args);
+                break;
+        }
+    }
+
+    /**
+     * This is where we check if an answer is good or not.
+     * @param user {User} - User who requested the command
+     * @param to {String} - Chan the commands comes from
+     * @param message {String} - Command's arguments
+     */
+    handleAnswer(user, to, message) {
+        var self = this;
+        if (self.currentQuestion !== null) {
+            self.currentQuestion.isGoodAnswer(message, good => {
+                if (good) {
+                    user.incrementPoints();
+                    user.plusGoodAnswer();
+                    self.ircBot.say(to, i18n.__('goodAnswer') + user.name + ' (' + user.points + ') ! ');
+                    self.currentQuestion.displayAnswer(self, to);
+                    self.clearGame();
+                    self.game(user, to, message);
+                }
+                else {
+                    user.plusAnswer();
+                }
+            })
         }
     }
 
     /**
      * Announce the beginning of a game a call the main function.
-     * @param from {String} - User who requested the command
+     * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
      */
-    startCommand(from, to, message) {
+    startCommand(user, to, message) {
         var self = this;
         if (self.running == false) {
             self.running = true;
-            self.ircBot.say(to, irc.colors.wrap('light_red', from + i18n.__('requestedStartQuizz')));
+            self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStartQuizz', user.name)));
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('startingQuizz')));
+            self.game(user, to, message);
         }
     }
 
     /**
      * Stop a game in a progress and announce it.
-     * @param from {String} - User who requested the command
+     * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
      */
-    stopCommand(from, to, message) {
+    stopCommand(user, to, message) {
         var self = this;
         if (self.running) {
+            if (user !== null && !user.isOp(self, to)) {
+                return false;
+            }
             self.running = false;
-            self.ircBot.say(to, irc.colors.wrap('light_red', from + i18n.__('requestedStopQuizz')));
+            self.clearGame();
+            clearTimeout(self.nextQuestionTimer);
+            if (user) {
+                self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStopQuizz', user.name)));
+            }
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('stoppingQuizz')));
         }
     }
 
     /**
      * Handle the lang change + lang help.
-     * @param from {String} - User who requested the command
+     * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
      * @param args {String[]} - Pre-parsed args
      */
-    langCommand(from, to, message, args) {
+    langCommand(user, to, message, args) {
         var self = this;
         var langArray = Object.keys(i18n.getCatalog());
         if (args[0] !== undefined && args[0] !== null && args.length > 0) {
@@ -206,6 +296,18 @@ class QuizzBot {
             });
             self.ircBot.say(to, irc.colors.wrap('white', langs));
         }
+    }
+
+    sayCommand(user, to, message, args) {
+        var self = this;
+        var msg = args.join(' ');
+        self.ircBot.say(to, msg);
+    }
+
+    testCommand(user, to, message, args) {
+        var self = this;
+        console.log(user);
+        console.log(user.isOp(self, to));
     }
 }
 
