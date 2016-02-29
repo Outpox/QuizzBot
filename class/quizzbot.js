@@ -1,10 +1,11 @@
 "use strict";
-
+const fs = require('fs');
 const irc = require('irc');
 const i18n = require('i18n');
 const Question = require('./question.js');
 const User = require('./user.js');
 const Error = require('./error.js');
+const Database = require('./database.js');
 
 var i = -1;
 
@@ -63,7 +64,7 @@ class QuizzBot {
                 self.loadQuestions();
                 self.standByMessage();
                 self.ircBot.addListener('message', (from, to, message) => {
-                    var user = User.getUser(from, to, message);
+                    var user = User.getUser(from, to);
                     if (from !== botName && message.length > 1 && message.charAt(0) === '!') {
                         self.handleCommand(user, to, message);
                     }
@@ -82,25 +83,37 @@ class QuizzBot {
         var self = this;
         self.questions = [];
         self.questionFiles.forEach((file, i) => {
-            //Right now it's only expected to be a json file. I'll handle .txt file later if ever.
-            var db = require(file);
-            db.forEach((q) => {
-                var quest = new Question(q);
-                self.questions.push(quest);
-            })
+            var ext = file.substr((~-file.lastIndexOf(".") >>> 0) + 2);
+            switch (ext) {
+                case 'json':
+                    var db = require(file);
+                    db.forEach((q) => {
+                        var quest = new Question(q);
+                        self.questions.push(quest);
+                    });
+                    break;
+                case 'txt':
+                    var array = fs.readFileSync(file, 'utf8').toString().split(/\r?\n/);
+                    array.forEach(line=> {
+                        var splitedLine = line.split('\\');
+                        if (splitedLine[1] !== undefined && splitedLine[1].charAt(0) === ' ') {
+                            splitedLine[1] = splitedLine[1].substring(1);
+                        }
+                        self.questions.push(new Question({question: splitedLine[0], answers: [splitedLine[1]]}));
+                    });
+                    break;
+            }
         });
     }
 
     game(user, to, message) {
         var self = this;
-
-        i++;
-        if (i < self.questions.length) {
+        var nextQuestion = Question.getNextQuestion(self.questions);
+        if (nextQuestion !== null) {
             self.ircBot.say(to, irc.colors.wrap('orange', i18n.__('nextQuestionIn', self.options.timeBetweenQuestion / 1000)));
             self.nextQuestionTimer = setTimeout(() => {
-                var q = self.questions[i];
-                self.currentQuestion = q;
-                q.askQuestion(self, to);
+                self.currentQuestion = nextQuestion;
+                nextQuestion.askQuestion(self, to);
                 self.currentTotalTimer = setTimeout(() => {
                     self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('noGoodAnswer')));
                     self.currentQuestion.displayAnswer(self, to);
@@ -217,7 +230,8 @@ class QuizzBot {
                 if (good) {
                     user.incrementPoints();
                     user.plusGoodAnswer();
-                    self.ircBot.say(to, i18n.__('goodAnswer') + user.name + ' (' + user.points + ') ! ');
+                    user.update();
+                    self.ircBot.say(to, i18n.__('goodAnswer', user.name) + ' (' + user.points + ') ! ');
                     self.currentQuestion.displayAnswer(self, to);
                     self.clearGame();
                     self.game(user, to, message);
@@ -306,8 +320,8 @@ class QuizzBot {
 
     testCommand(user, to, message, args) {
         var self = this;
-        console.log(user);
-        console.log(user.isOp(self, to));
+        var db = new Database;
+        db.getUser(user, to);
     }
 }
 
