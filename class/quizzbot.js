@@ -26,6 +26,7 @@ class QuizzBot {
         this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
         this.options.questionTag = options.questionTag || i18n.__('questionTag');
         this.options.answerTag = options.answerTag || i18n.__('answerTag');
+        this.options.nickServPassword = options.nickServPassword || null;
 
         this.questionFiles = questionDatabases;
         this.running = false;
@@ -60,6 +61,9 @@ class QuizzBot {
         self.ircBot = new irc.Client(server, botName, options);
         self.ircBot.connect(()=> {
             setTimeout(()=> {
+                if (self.options.nickServPassword !== null) {
+                    self.ircBot.say('NickServ', 'IDENTIFY ' + self.options.nickServPassword);
+                }
                 console.log(options.username + ' connected.');
                 self.loadQuestions();
                 self.standByMessage();
@@ -72,7 +76,7 @@ class QuizzBot {
                         self.handleAnswer(user, to, message);
                     }
                 });
-            }, 20);
+            }, 500);
         });
     }
 
@@ -312,12 +316,18 @@ class QuizzBot {
     }
 
     sayCommand(user, to, message, args) {
+        if (user !== null && !user.isOp(self, to)) {
+            return false;
+        }
         var self = this;
         var msg = args.join(' ');
         self.ircBot.say(to, msg);
     }
 
     testCommand(user, to, message, args) {
+        if (user !== null && !user.isOp(self, to)) {
+            return false;
+        }
         var self = this;
         var db = new Database;
         db.getUser(user, to);

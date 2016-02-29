@@ -10,6 +10,10 @@ i18n.configure({
     directory: 'lang/'
 });
 
+var options = {
+    timeBetweenQuestion: 15000,
+    nickServPassword: 'quizzbot'
+};
 
 //new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#test-quizz'], ['../questions/airfrance.json'], {timeBetweenQuestion: 5000});
-new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#test-quizz'], ['./questions/database.txt'], {timeBetweenQuestion: 5000});
+new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#quizz'], ['./questions/database.txt'], options);

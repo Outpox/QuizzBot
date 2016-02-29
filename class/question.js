@@ -23,7 +23,6 @@ class Question {
         var self = this;
         self.totalTries++;
         var answers = new fz(self.answers, true, 3, 4);
-        console.log(answers.get(message));
         if (answers.get(message) !== null) {
             answers.get(message).forEach(a=> {
                 if (a[0] > 0.8) {
@@ -55,7 +54,6 @@ class Question {
      */
     static getNextQuestion(questionList) {
         var id = Math.floor(Math.random() * (questionList.length));
-        console.log(id);
         if (totalAsked < questionList.length) {
             if (!questionList[id].asked) {
                 return questionList[id];
