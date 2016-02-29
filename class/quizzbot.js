@@ -24,6 +24,7 @@ class QuizzBot {
         this.options = options || {};
         this.options.questionDuration = options.questionDuration < 10000 ? 10000 : options.questionDuration || 25000;
         this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
+        this.options.timeBeforeTip = (options.timeBeforeTip > this.options.questionDuration ? Math.floor(this.options.questionDuration / 2) : options.timeBeforeTip) || 10000;
         this.options.nickServPassword = options.nickServPassword || null;
 
         this.questionFiles = questionDatabases;
@@ -124,9 +125,9 @@ class QuizzBot {
                 }, self.options.questionDuration);
 
                 self.currentEndingSoonTimer = setTimeout(() => {
-                    self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('questionEndingIn', 5)));
+                    self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('questionEndingIn', self.options.timeBeforeTip / 1000)));
                     self.currentQuestion.displayTip(self, to);
-                }, self.options.questionDuration - 10000)
+                }, self.options.questionDuration - self.options.timeBeforeTip)
 
             }, self.options.timeBetweenQuestion);
         }
