@@ -22,7 +22,7 @@ class QuizzBot {
     constructor(server, port, ssl, botName, channels, questionDatabases, options) {
         options = options || {};
         this.options = options || {};
-        this.options.questionDuration = options.questionDuration < 5000 ? 5000 : options.questionDuration || 20000;
+        this.options.questionDuration = options.questionDuration < 10000 ? 10000 : options.questionDuration || 25000;
         this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
         this.options.nickServPassword = options.nickServPassword || null;
 
@@ -126,7 +126,7 @@ class QuizzBot {
                 self.currentEndingSoonTimer = setTimeout(() => {
                     self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('questionEndingIn', 5)));
                     self.currentQuestion.displayTip(self, to);
-                }, self.options.questionDuration - 5000)
+                }, self.options.questionDuration - 10000)
 
             }, self.options.timeBetweenQuestion);
         }
