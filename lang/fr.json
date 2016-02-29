@@ -20,6 +20,8 @@
 
   "questionTag": "[Question] ",
   "answerTag": "[Réponse] ",
+  "tipTag": "[Indice] ",
+
   "questionInQuizz": "J'ai %s questions dans ma liste !",
   "nextQuestionIn" : "Prochaine question dans %ss !",
   "questionEndingIn": "Fin de la question dans %ss !",

@@ -24,8 +24,6 @@ class QuizzBot {
         this.options = options || {};
         this.options.questionDuration = options.questionDuration < 5000 ? 5000 : options.questionDuration || 20000;
         this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
-        this.options.questionTag = options.questionTag || i18n.__('questionTag');
-        this.options.answerTag = options.answerTag || i18n.__('answerTag');
         this.options.nickServPassword = options.nickServPassword || null;
 
         this.questionFiles = questionDatabases;
@@ -127,6 +125,7 @@ class QuizzBot {
 
                 self.currentEndingSoonTimer = setTimeout(() => {
                     self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('questionEndingIn', 5)));
+                    self.currentQuestion.displayTip(self, to);
                 }, self.options.questionDuration - 5000)
 
             }, self.options.timeBetweenQuestion);
@@ -325,12 +324,11 @@ class QuizzBot {
     }
 
     testCommand(user, to, message, args) {
+        var self = this;
         if (user !== null && !user.isOp(self, to)) {
             return false;
         }
-        var self = this;
-        var db = new Database;
-        db.getUser(user, to);
+        self.currentQuestion.displayTip(self, to);
     }
 }
 

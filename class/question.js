@@ -2,8 +2,15 @@
 
 const irc = require('irc');
 const fz = require('fuzzyset.js');
+const i18n = require('i18n');
+
 var id = 0;
 var totalAsked = 0;
+
+function setCharAt(str, index, char) {
+    if (index > str.length - 1) return str;
+    return str.substr(0, index) + char + str.substr(index + 1);
+}
 
 class Question {
     constructor(q) {
@@ -38,13 +45,39 @@ class Question {
         self.asked = true;
         totalAsked++;
         console.log(quizz.currentQuestion.answers);
-        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', quizz.options.questionTag) + irc.colors.wrap('dark_blue', self.question));
+        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('questionTag')) + irc.colors.wrap('dark_blue', self.question));
     }
 
     displayAnswer(quizz, to) {
         var self = this;
-        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', quizz.options.answerTag) + irc.colors.wrap('dark_green', self.question));
+        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('answerTag')) + irc.colors.wrap('dark_green', self.question));
         quizz.ircBot.say(to, irc.colors.wrap('dark_green', self.answers.join(', ')));
+    }
+
+    displayTip(quizz, to) {
+        var self = this;
+        var id = Math.floor(Math.random() * (self.answers.length));
+        var answer = self.answers[id];
+        var tip = '';
+        answer.split(' ').forEach(word => {
+            var wordTip = '';
+            var i;
+            for (i = 0; i < word.length; i++) {
+                wordTip += '_';
+            }
+            if (word.length > 3) {
+                var letters = Math.floor(word.length / 3);
+                for (i = 0; i < letters; i++) {
+                    var place = Math.floor(Math.random() * (word.length));
+                    while (wordTip.charAt(place) !== '_') {
+                        place = Math.floor(Math.random() * (word.length));
+                    }
+                    wordTip = setCharAt(wordTip, place, word.charAt(place));
+                }
+            }
+            tip += wordTip + ' ';
+        });
+        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('tipTag')) + irc.colors.wrap('light_gray', tip));
     }
 
     /**
