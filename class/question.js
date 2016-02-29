@@ -50,8 +50,8 @@ class Question {
 
     displayAnswer(quizz, to) {
         var self = this;
-        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('answerTag')) + irc.colors.wrap('dark_green', self.question));
-        quizz.ircBot.say(to, irc.colors.wrap('dark_green', self.answers.join(', ')));
+        //quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('answerTag')) + irc.colors.wrap('dark_green', self.question));
+        quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('answerTag')) + irc.colors.wrap('dark_green', self.answers.join(', ')));
     }
 
     displayTip(quizz, to) {
