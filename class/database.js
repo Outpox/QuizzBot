@@ -2,14 +2,11 @@
 
 const loki = require('lokijs');
 
+var _db;
+
 class Database {
     constructor() {
-        this.database = new loki('data/quizzbot.db');
-        console.log(this.database.loadCollection('users'));
-        if (this.database.getCollection('users') === null) {
-            this.database.addCollection('users');
-            this.database.save();
-        }
+        _db = new loki('data/quizzbot.db');
     }
 
     /**
@@ -17,17 +14,27 @@ class Database {
      * @param user {User}
      */
     saveUser(user) {
-        this.database.getCollection('users').insert(user);
-        this.database.save();
+        _db.loadDatabase({}, () => {
+            _db.getCollection('users').insert(user);
+            _db.save();
+        });
     }
 
     updateUser(user) {
-        this.database.getCollection('users').update(user);
+        _db.loadDatabase({}, () => {
+            _db.getCollection('users').update(user);
+        });
     }
 
-    getUser(name, channel) {
-        console.log(this.database.getCollection('users'));
-        console.log(this.database.getCollection('users').find({'$and': [{name: name}, {channel: channel}]}));
+    getUser(name, channel, done) {
+        _db.loadDatabase({}, () => {
+            var userCollection = _db.getCollection('users');
+            if (!userCollection) {
+                userCollection = _db.addCollection('users');
+            }
+            var results = userCollection.findOne({'$and': [{'name': name}, {'channel': channel}]});
+            done(results);
+        });
     }
 }
 

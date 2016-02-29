@@ -230,7 +230,6 @@ class QuizzBot {
                 if (good) {
                     user.incrementPoints();
                     user.plusGoodAnswer();
-                    user.update();
                     self.ircBot.say(to, i18n.__('goodAnswer', user.name) + ' (' + user.points + ') ! ');
                     self.currentQuestion.displayAnswer(self, to);
                     self.clearGame();
