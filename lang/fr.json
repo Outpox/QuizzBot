@@ -7,7 +7,7 @@
 
   "standByMessage": "ヽ(◉◡◔)ﾉ SALUT JE SUIS QUIZZBOT JE SUIS UN BOT POUR FAIRE DES QUIZZ ヽ(◉◡◔)ﾉ",
 
-  "startCommandMessage": "Faîtes !start pour lancer une partie !",
+  "startCommandMessage": "Faites !start pour lancer une partie !",
 
   "langSet": "Langue changée en français !",
   "availableLang" : "Langues disponibles : ",
