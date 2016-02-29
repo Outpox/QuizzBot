@@ -26,6 +26,7 @@ class QuizzBot {
         this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
         this.options.timeBeforeTip = (options.timeBeforeTip > this.options.questionDuration ? Math.floor(this.options.questionDuration / 2) : options.timeBeforeTip) || 10000;
         this.options.nickServPassword = options.nickServPassword || null;
+        this.options.continuousNoAnswer = options.continuousNoAnswer || 8;
 
         this.questionFiles = questionDatabases;
         this.running = false;
@@ -34,6 +35,7 @@ class QuizzBot {
         this.currentEndingSoonTimer = null;
         this.nextQuestionTimer = null;
         this.questions = [];
+        this.continuousNoAnswerCount = 0;
         this.init(server, port, ssl, botName, channels);
     }
 
@@ -112,7 +114,7 @@ class QuizzBot {
     game(user, to, message) {
         var self = this;
         var nextQuestion = Question.getNextQuestion(self.questions);
-        if (nextQuestion !== null) {
+        if (nextQuestion !== null && self.continuousNoAnswerCount < self.options.continuousNoAnswer) {
             self.ircBot.say(to, irc.colors.wrap('orange', i18n.__('nextQuestionIn', self.options.timeBetweenQuestion / 1000)));
             self.nextQuestionTimer = setTimeout(() => {
                 self.currentQuestion = nextQuestion;
@@ -120,6 +122,7 @@ class QuizzBot {
                 self.currentTotalTimer = setTimeout(() => {
                     self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('noGoodAnswer')));
                     self.currentQuestion.displayAnswer(self, to);
+                    self.continuousNoAnswerCount++;
                     self.clearGame();
                     self.game(user, to, message);
                 }, self.options.questionDuration);
@@ -236,6 +239,7 @@ class QuizzBot {
                     user.plusGoodAnswer();
                     self.ircBot.say(to, i18n.__('goodAnswer', user.name) + ' (' + user.points + ') ! ');
                     self.currentQuestion.displayAnswer(self, to);
+                    self.continuousNoAnswerCount = 0;
                     self.clearGame();
                     self.game(user, to, message);
                 }
