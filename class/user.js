@@ -1,6 +1,14 @@
 "use strict";
 
-var userList = {};
+const Database = require('./database.js');
+
+var _db = new Database();
+
+var userList;
+_db.getUserlist(list => {
+    userList = list;
+});
+
 var id = 0;
 
 class User {
@@ -13,7 +21,9 @@ class User {
         this.maxContinuous = 0;
         this.answers = 0;
         this.goodAnswers = 0;
-        userList[this.name] = this;
+        this.quizzStarted = 0;
+        userList.users[this.name] = this;
+        _db.updateUserlist(userList);
     }
 
     /**
@@ -22,7 +32,7 @@ class User {
      * @param channel
      */
     static getUser(userName, channel) {
-        return userList[userName] || new User(userName, channel);
+        return userList.users[userName] || new User(userName, channel);
     }
 
     incrementPoints() {
@@ -40,6 +50,14 @@ class User {
     isOp(quizz, chan) {
         var self = this;
         return quizz.ircBot.chans[chan].users[self.name].indexOf('@') !== -1;
+    }
+
+    static getUserlist() {
+        return userList;
+    }
+
+    static saveUserlist() {
+        _db.updateUserlist(userList);
     }
 }
 

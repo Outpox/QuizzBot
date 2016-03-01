@@ -11,28 +11,34 @@ class Database {
 
     /**
      * Save the user to the db. Only used when creating a new user.
-     * @param user {User}
+     * @param userlist
      */
-    saveUser(user) {
+    save() {
         _db.loadDatabase({}, () => {
-            _db.getCollection('users').insert(user);
             _db.save();
         });
     }
 
-    updateUser(user) {
+    updateUserlist(userlist) {
         _db.loadDatabase({}, () => {
-            _db.getCollection('users').update(user);
+            _db.getCollection('userlist').update(userlist);
+            _db.save();
         });
     }
 
-    getUser(name, channel, done) {
+    getUserlist(done) {
         _db.loadDatabase({}, () => {
-            var userCollection = _db.getCollection('users');
-            if (!userCollection) {
-                userCollection = _db.addCollection('users');
+            var userlistCollection = _db.getCollection('userlist');
+            if (!userlistCollection) {
+                userlistCollection = _db.addCollection('userlist');
             }
-            var results = userCollection.findOne({'$and': [{'name': name}, {'channel': channel}]});
+            var results = userlistCollection.findOne({'id': 0});
+            if (results === null) {
+                var ul = {'id': 0, users: []};
+                userlistCollection.insert(ul);
+                results = ul;
+                _db.save();
+            }
             done(results);
         });
     }

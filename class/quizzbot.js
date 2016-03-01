@@ -8,6 +8,7 @@ const Error = require('./error.js');
 const Database = require('./database.js');
 
 var i = -1;
+var _db = new Database();
 
 class QuizzBot {
     /**
@@ -124,6 +125,7 @@ class QuizzBot {
                     self.currentQuestion.displayAnswer(self, to);
                     self.continuousNoAnswerCount++;
                     self.clearGame();
+                    User.saveUserlist();
                     self.game(user, to, message);
                 }, self.options.questionDuration);
 
@@ -241,6 +243,7 @@ class QuizzBot {
                     self.currentQuestion.displayAnswer(self, to);
                     self.continuousNoAnswerCount = 0;
                     self.clearGame();
+                    User.saveUserlist();
                     self.game(user, to, message);
                 }
                 else {
@@ -262,6 +265,7 @@ class QuizzBot {
             self.running = true;
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStartQuizz', user.name)));
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('startingQuizz')));
+            user.quizzStarted++;
             self.game(user, to, message);
         }
     }
@@ -333,7 +337,7 @@ class QuizzBot {
         if (user !== null && !user.isOp(self, to)) {
             return false;
         }
-        self.currentQuestion.displayTip(self, to);
+        console.log(User.getUserlist());
     }
 }
 
