@@ -2,28 +2,36 @@
 
 const Database = require('./database.js');
 
-var _db = new Database();
-
-var userList;
-_db.getUserlist(list => {
-    userList = list;
-});
+var userlist = {};
 
 var id = 0;
 
 class User {
 
-    constructor(from, to) {
-        this.id = id++;
-        this.name = from;
-        this.channel = to;
-        this.points = 0;
-        this.maxContinuous = 0;
-        this.answers = 0;
-        this.goodAnswers = 0;
-        this.quizzStarted = 0;
-        userList.users[this.name] = this;
-        _db.updateUserlist(userList);
+    constructor(from, to, loadUser) {
+        if (loadUser) {
+            this.id = loadUser.id;
+            this.name = loadUser.name;
+            this.channel = loadUser.channel;
+            this.points = loadUser.points;
+            this.maxContinuous = loadUser.maxContinuous;
+            this.answers = loadUser.answers;
+            this.goodAnswers = loadUser.goodAnswers;
+            this.quizzStarted = loadUser.quizzStarted;
+            userlist[this.name] = this;
+        }
+        else {
+            this.id = id++;
+            this.name = from;
+            this.channel = to;
+            this.points = 0;
+            this.maxContinuous = 0;
+            this.answers = 0;
+            this.goodAnswers = 0;
+            this.quizzStarted = 0;
+            userlist[this.name] = this;
+            Database.saveUserlist(userlist);
+        }
     }
 
     /**
@@ -32,7 +40,7 @@ class User {
      * @param channel
      */
     static getUser(userName, channel) {
-        return userList.users[userName] || new User(userName, channel);
+        return userlist[userName] || new User(userName, channel);
     }
 
     incrementPoints() {
@@ -53,12 +61,17 @@ class User {
     }
 
     static getUserlist() {
-        return userList;
+        return userlist;
     }
 
     static saveUserlist() {
-        _db.updateUserlist(userList);
+        Database.saveUserlist(userlist);
     }
 }
+
+Object.keys(Database.getUserlist()).forEach(user => {
+    new User('', '', userlist[user]);
+    console.log(user);
+});
 
 module.exports = User;
