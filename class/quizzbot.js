@@ -266,6 +266,7 @@ class QuizzBot {
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStartQuizz', user.name)));
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('startingQuizz')));
             user.quizzStarted++;
+            self.continuousNoAnswerCount = 0;
             self.game(user, to, message);
         }
     }
@@ -288,7 +289,11 @@ class QuizzBot {
             if (user) {
                 self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStopQuizz', user.name)));
             }
-            self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('stoppingQuizz')));
+            if (self.continuousNoAnswerCount >= self.options.continuousNoAnswer) {
+                self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('stoppingQuizzForInactivity')));
+            } else {
+                self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('stoppingQuizz')));
+            }
         }
     }
 

@@ -3,6 +3,7 @@
   "requestedStartQuizz" : "%s a demandé à démarrer le Quizz",
 
   "stoppingQuizz" : "Arrêt du Quizz !",
+  "stoppingQuizzForInactivity" : "Arrêt du Quizz pour cause d'inactivité !",
   "requestedStopQuizz" : "%s a demandé à arrêter le Quizz",
 
   "standByMessage": "ヽ(◉◡◔)ﾉ SALUT JE SUIS QUIZZBOT JE SUIS UN BOT POUR FAIRE DES QUIZZ ヽ(◉◡◔)ﾉ",
