@@ -74,7 +74,7 @@ class QuizzBot {
                     if (from !== botName && message.length > 1 && message.charAt(0) === '!') {
                         self.handleCommand(user, to, message);
                     }
-                    else if (self.running && self.currentQuestion !== null && from !== botName && message.length > 1) {
+                    else if (self.running && self.currentQuestion !== null && from !== botName) {
                         self.handleAnswer(user, to, message);
                     }
                 });
@@ -349,7 +349,7 @@ class QuizzBot {
             self.startCommand(user, to, message, true);
         }
         self.clearGame();
-        self.game(user, to, message,self.questions[args[0]]);
+        self.game(user, to, message,self.questions[args[0] - 1]);
     }
 
     sayCommand(user, to, message, args) {
