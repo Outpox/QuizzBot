@@ -24,8 +24,11 @@
   "tipTag": "[Indice] ",
 
   "questionInQuizz": "J'ai %s questions dans ma liste !",
-  "nextQuestionIn" : "Prochaine question dans %ss !",
+  "nextQuestionIn": "Prochaine question dans %ss !",
   "questionEndingIn": "Fin de la question dans %ss !",
   "noGoodAnswer": "Personne n'a trouvé la bonne réponse !",
-  "noMoreQuestion" : "Il ne reste plus de questions à poser !"
+  "noMoreQuestion": "Il ne reste plus de questions à poser !",
+
+  "userStats": "Utilisateur n°{{id}}\n{{name}} sur {{channel}} : {{points}} points\n{{answers}} réponses dont {{goodAnswers}} bonnes réponses",
+  "userDoesNotExists": "L'utilisateur %s n'existe pas"
 }

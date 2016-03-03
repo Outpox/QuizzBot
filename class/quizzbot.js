@@ -267,6 +267,8 @@ class QuizzBot {
 
     /**
      * Announce the beginning of a game a call the main function.
+     * Usage: !start
+     *
      * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
@@ -288,6 +290,9 @@ class QuizzBot {
 
     /**
      * Stop a game in a progress and announce it.
+     * Requires to be OP
+     * Usage: !stop
+     *
      * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
@@ -302,7 +307,7 @@ class QuizzBot {
             self.clearGame();
             clearTimeout(self.nextQuestionTimer);
             if (user) {
-                user.quizzStoped++;
+                user.quizzStopped++;
                 self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStopQuizz', user.name)));
             }
             if (self.continuousNoAnswerCount >= self.options.continuousNoAnswer) {
@@ -316,6 +321,10 @@ class QuizzBot {
 
     /**
      * Handle the lang change + lang help.
+     * Requires to be OP
+     * Usage: !lang language
+     * 'language' is a 2 chars string : 'fr', 'en' ...
+     *
      * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
@@ -348,6 +357,17 @@ class QuizzBot {
         }
     }
 
+    /**
+     * Force ask a question with the given ID
+     * Requires to be OP
+     * Usage: !ask questionId
+     * 'questionId is an integer
+     *
+     * @param user {User} - User who requested the command
+     * @param to {String} - Chan the commands comes from
+     * @param message {String} - Command's arguments
+     * @param args {String[]} - Pre-parsed args
+     */
     askQuestionCommand(user, to, message, args) {
         var self = this;
         if (user !== null && !user.isOp(self, to)) {
@@ -360,11 +380,42 @@ class QuizzBot {
         self.game(user, to, message,self.questions[args[0] - 1]);
     }
 
+    /**
+     * Private message the user with the information about himself or about the given user
+     * Usage: !stats
+     * Or: !stats username
+     *
+     * @param user {User} - User who requested the command
+     * @param to {String} - Chan the commands comes from
+     * @param message {String} - Command's arguments
+     * @param args {String[]} - Pre-parsed args
+     */
     statsCommand(user, to, message, args) {
         var self = this;
-
+        if (args[0]) {
+            var ul = Database.getUserlist();
+            if (ul[args[0]]) {
+                self.ircBot.say(user.name, i18n.__('userStats', User.getUser(ul[args[0]].name, to)));
+            }
+            else {
+                self.ircBot.say(user.name, i18n.__('userDoesNotExists', args[0]));
+            }
+        }
+        else {
+            self.ircBot.say(user.name, i18n.__('userStats', user));
+        }
     }
 
+    /**
+     * Experimental command to force the bot to say something
+     * Requires to be OP
+     * Usage: !say something to say
+     *
+     * @param user {User} - User who requested the command
+     * @param to {String} - Chan the commands comes from
+     * @param message {String} - Command's arguments
+     * @param args {String[]} - Pre-parsed args
+     */
     sayCommand(user, to, message, args) {
         var self = this;
         if (user !== null && !user.isOp(self, to)) {
