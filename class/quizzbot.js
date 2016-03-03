@@ -393,7 +393,7 @@ class QuizzBot {
     statsCommand(user, to, message, args) {
         var self = this;
         if (args[0]) {
-            var ul = Database.getUserlist();
+            var ul = User.getUserlist();
             if (ul[args[0]]) {
                 self.ircBot.say(user.name, i18n.__('userStats', User.getUser(ul[args[0]].name, to)));
             }
