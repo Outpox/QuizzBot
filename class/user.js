@@ -8,28 +8,23 @@ var id = 0;
 
 class User {
 
-    constructor(from, to, loadUser) {
-        if (loadUser) {
-            this.id = loadUser.id;
-            this.name = loadUser.name;
-            this.channel = loadUser.channel;
-            this.points = loadUser.points;
-            this.maxContinuous = loadUser.maxContinuous;
-            this.answers = loadUser.answers;
-            this.goodAnswers = loadUser.goodAnswers;
-            this.quizzStarted = loadUser.quizzStarted;
-            userlist[this.name] = this;
+    constructor(from, to, user) {
+        this.id = id++;
+        this.name = from;
+        this.channel = to;
+        this.points = 0;
+        this.maxContinuous = 0;
+        this.answers = 0;
+        this.goodAnswers = 0;
+        this.quizzStarted = 0;
+        this.quizzStopped = 0;
+        if (user) {
+            for (var prop in user) {
+                this[prop] = user[prop];
+            }
         }
-        else {
-            this.id = id++;
-            this.name = from;
-            this.channel = to;
-            this.points = 0;
-            this.maxContinuous = 0;
-            this.answers = 0;
-            this.goodAnswers = 0;
-            this.quizzStarted = 0;
-            userlist[this.name] = this;
+        userlist[this.name] = this;
+        if (!user) {
             Database.saveUserlist(userlist);
         }
     }
@@ -48,6 +43,7 @@ class User {
     }
 
     plusGoodAnswer() {
+        this.answers++;
         this.goodAnswers++;
     }
 
@@ -69,9 +65,9 @@ class User {
     }
 }
 
-Object.keys(Database.getUserlist()).forEach(user => {
-    new User('', '', userlist[user]);
-    console.log(user);
-});
+var ul = Database.getUserlist();
+for (var user in ul) {
+    new User('', '', ul[user]);
+}
 
 module.exports = User;
