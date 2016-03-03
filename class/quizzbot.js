@@ -267,8 +267,9 @@ class QuizzBot {
      * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
+     * @param noGame {Boolean} - Called with askQuestionCommand()
      */
-    startCommand(user, to, message) {
+    startCommand(user, to, message, noGame) {
         var self = this;
         if (self.running == false) {
             self.running = true;
@@ -276,7 +277,9 @@ class QuizzBot {
             self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('startingQuizz')));
             user.quizzStarted++;
             self.continuousNoAnswerCount = 0;
-            self.game(user, to, message);
+            if (!noGame) {
+                self.game(user, to, message);
+            }
         }
     }
 
@@ -338,19 +341,22 @@ class QuizzBot {
     }
 
     askQuestionCommand(user, to, message, args) {
+        var self = this;
         if (user !== null && !user.isOp(self, to)) {
             return false;
         }
-        var self = this;
+        if (!self.running) {
+            self.startCommand(user, to, message, true);
+        }
         self.clearGame();
-        self.game(user, to, message,self.questions(args[0]));
+        self.game(user, to, message,self.questions[args[0]]);
     }
 
     sayCommand(user, to, message, args) {
+        var self = this;
         if (user !== null && !user.isOp(self, to)) {
             return false;
         }
-        var self = this;
         var msg = args.join(' ');
         self.ircBot.say(to, msg);
     }
