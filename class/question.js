@@ -44,7 +44,7 @@ class Question {
         var self = this;
         self.asked = true;
         totalAsked++;
-        console.log(quizz.currentQuestion.answers);
+        console.log('[' + (self.id + 1) + '] ' + quizz.currentQuestion.answers);
         quizz.ircBot.say(to, irc.colors.wrap('light_magenta', i18n.__('questionTag')) + irc.colors.wrap('dark_blue', self.question));
     }
 
