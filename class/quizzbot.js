@@ -102,8 +102,8 @@ class QuizzBot {
                     var array = fs.readFileSync(file, 'utf8').toString().split(/\r?\n/);
                     array.forEach(line=> {
                         var splitedLine = line.split('\\');
-                        if (splitedLine[1] !== undefined && splitedLine[1].charAt(0) === ' ') {
-                            splitedLine[1] = splitedLine[1].substring(1);
+                        if (splitedLine[1] !== undefined) {
+                            splitedLine[1] = splitedLine[1].trim();
                         }
                         self.questions.push(new Question({question: splitedLine[0], answers: [splitedLine[1]]}));
                     });
@@ -112,9 +112,15 @@ class QuizzBot {
         });
     }
 
-    game(user, to, message) {
+    game(user, to, message, forcedQuestion) {
         var self = this;
-        var nextQuestion = Question.getNextQuestion(self.questions);
+        var nextQuestion;
+        if (!forcedQuestion) {
+            nextQuestion = Question.getNextQuestion(self.questions);
+        }
+        else {
+            nextQuestion = forcedQuestion;
+        }
         if (nextQuestion !== null && self.continuousNoAnswerCount < self.options.continuousNoAnswer) {
             self.ircBot.say(to, irc.colors.wrap('orange', i18n.__('nextQuestionIn', self.options.timeBetweenQuestion / 1000)));
             self.nextQuestionTimer = setTimeout(() => {
@@ -216,6 +222,9 @@ class QuizzBot {
                 break;
             case '!lang':
                 self.langCommand(user, to, message, args);
+                break;
+            case '!ask':
+                self.askQuestionCommand(user, to, message, args);
                 break;
             case '!say':
                 self.sayCommand(user, to, message, args);
@@ -326,6 +335,15 @@ class QuizzBot {
             });
             self.ircBot.say(to, irc.colors.wrap('white', langs));
         }
+    }
+
+    askQuestionCommand(user, to, message, args) {
+        if (user !== null && !user.isOp(self, to)) {
+            return false;
+        }
+        var self = this;
+        self.clearGame();
+        self.game(user, to, message,self.questions(args[0]));
     }
 
     sayCommand(user, to, message, args) {
