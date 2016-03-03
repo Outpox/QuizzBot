@@ -360,7 +360,7 @@ class QuizzBot {
         if (user !== null && !user.isOp(self, to)) {
             return false;
         }
-        console.log(User.getUserlist());
+        console.log(User.getUser(user.name, to));
     }
 }
 
