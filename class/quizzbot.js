@@ -226,6 +226,9 @@ class QuizzBot {
             case '!ask':
                 self.askQuestionCommand(user, to, message, args);
                 break;
+            case '!stats':
+                self.statsCommand(user, to, message, args);
+                break;
             case '!say':
                 self.sayCommand(user, to, message, args);
                 break;
@@ -267,7 +270,7 @@ class QuizzBot {
      * @param user {User} - User who requested the command
      * @param to {String} - Chan the commands comes from
      * @param message {String} - Command's arguments
-     * @param noGame {Boolean} - Called with askQuestionCommand()
+     * @param noGame optional {Boolean} - Called with askQuestionCommand()
      */
     startCommand(user, to, message, noGame) {
         var self = this;
@@ -299,6 +302,7 @@ class QuizzBot {
             self.clearGame();
             clearTimeout(self.nextQuestionTimer);
             if (user) {
+                user.quizzStoped++;
                 self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('requestedStopQuizz', user.name)));
             }
             if (self.continuousNoAnswerCount >= self.options.continuousNoAnswer) {
@@ -306,6 +310,7 @@ class QuizzBot {
             } else {
                 self.ircBot.say(to, irc.colors.wrap('light_red', i18n.__('stoppingQuizz')));
             }
+            User.saveUserlist();
         }
     }
 
@@ -318,6 +323,9 @@ class QuizzBot {
      */
     langCommand(user, to, message, args) {
         var self = this;
+        if (user !== null && !user.isOp(self, to)) {
+            return false;
+        }
         var langArray = Object.keys(i18n.getCatalog());
         if (args[0] !== undefined && args[0] !== null && args.length > 0) {
             self.setLang(args[0]);
@@ -350,6 +358,11 @@ class QuizzBot {
         }
         self.clearGame();
         self.game(user, to, message,self.questions[args[0] - 1]);
+    }
+
+    statsCommand(user, to, message, args) {
+        var self = this;
+
     }
 
     sayCommand(user, to, message, args) {
