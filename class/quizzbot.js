@@ -6,6 +6,7 @@ const Question = require('./question.js');
 const User = require('./user.js');
 const Error = require('./error.js');
 const Database = require('./database.js');
+const Top = require('./top.js');
 
 var i = -1;
 var _db = new Database();
@@ -229,6 +230,9 @@ class QuizzBot {
             case '!stats':
                 self.statsCommand(user, to, message, args);
                 break;
+            case '!top':
+                self.topCommand(user, to, message, args);
+                break;
             case '!say':
                 self.sayCommand(user, to, message, args);
                 break;
@@ -403,6 +407,40 @@ class QuizzBot {
         }
         else {
             self.ircBot.say(user.name, i18n.__('userStats', user));
+        }
+    }
+
+    /**
+     * If user is OP display the top in the channel or trough PM. An integer can be passed as the top max limit.
+     * Usage: !top
+     * Or: !top 10
+     *
+     * @param user {User} - User who requested the command
+     * @param to {String} - Chan the commands comes from
+     * @param message {String} - Command's arguments
+     * @param args {String[]} - Pre-parsed args
+     */
+    topCommand(user, to, message, args) {
+        var self = this;
+        var sortedUserlist = Top.sortUserlist(Database.getUserlist());
+        var max = Top.getMax(sortedUserlist, args[0]);
+        var topString = '';
+        for (var i = 0; i < max; i++) {
+            var u = sortedUserlist[i];
+            var top = {
+                place: i + 1,
+                name: u.name,
+                points: u.points,
+                ratio: Math.round(((u.goodAnswers / u.answers) * 100) * 100) / 100
+            };
+            topString += i18n.__('topUser', top);
+        }
+
+        if (user !== null && !user.isOp(self, to)) {
+            self.ircBot.say(user.name, topString);
+        }
+        else if (user.isOp(self, to)) {
+            self.ircBot.say(to, topString);
         }
     }
 

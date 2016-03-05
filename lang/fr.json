@@ -30,5 +30,6 @@
   "noMoreQuestion": "Il ne reste plus de questions à poser !",
 
   "userStats": "Utilisateur n°{{id}}\n{{name}} sur {{channel}} : {{points}} points\n{{answers}} réponses dont {{goodAnswers}} bonnes réponses",
+  "topUser": "{{place}}. {{name}} : {{points}} points, {{ratio}}% de bonnes réponses\n",
   "userDoesNotExists": "L'utilisateur %s n'existe pas"
 }
