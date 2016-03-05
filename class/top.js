@@ -48,6 +48,9 @@ class Score {
                 return max;
             }
         }
+        else {
+            return 3;
+        }
     }
 }
 
