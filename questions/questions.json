@@ -1,0 +1,21 @@
+[
+  {
+    "question" : "What's the most famous social network?",
+    "answers" : [
+      "Facebook"
+    ]
+  },
+  {
+    "question": "What does the IRC acronym means?",
+    "answers": [
+      "Internet Relay Chat"
+    ]
+  },
+  {
+    "question": "What are beaches generally composed of?",
+    "answers": [
+      "Pebbles",
+      "Sand"
+    ]
+  }
+]
