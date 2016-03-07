@@ -28,7 +28,7 @@ var botNick = 'QuizzBot';
 var channelList = ['#quizz'];
 
 //Expected: [String] (relative path)
-var questionFiles = ['./question/database.txt'];
+var questionFiles = ['./questions/database.txt'];
 //^^--------------------^^
 
 //vv--------------------vv
