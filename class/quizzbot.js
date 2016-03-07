@@ -22,7 +22,7 @@ class QuizzBot {
         options = options || {};
         this.options = options || {};
         this.options.questionDuration = options.questionDuration < 10000 ? 10000 : options.questionDuration || 25000;
-        this.options.timeBetweenQuestion = options.timeBetweenQuestion || 10000;
+        this.options.timeBetweenQuestion = options.timeBetweenQuestion || 15000;
         this.options.timeBeforeTip = (options.timeBeforeTip > this.options.questionDuration ? Math.floor(this.options.questionDuration / 2) : options.timeBeforeTip) || 10000;
         this.options.nickServPassword = options.nickServPassword || null;
         this.options.continuousNoAnswer = options.continuousNoAnswer || 8;
