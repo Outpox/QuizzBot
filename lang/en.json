@@ -2,8 +2,9 @@
   "startingQuizz": "Starting Quizz !",
   "requestedStartQuizz": " requested to start the Quizz",
 
-  "stoppingQuizz": "stoppingQuizz",
-  "requestedStopQuizz": "requestedStopQuizz",
+  "stoppingQuizz": "Stopping quizz!",
+  "stoppingQuizzForInactivity" : "Stopped quizz for inactivity!",
+  "requestedStopQuizz": "%s requested to stop the quizz!",
 
   "standByMessage": "ヽ(◉◡◔)ﾉ OLA I AM QUIZZBOT I AM LE BOT FOR LE QUIZZ HON HON BAGUETTO ヽ(◉◡◔)ﾉ",
 
@@ -12,7 +13,31 @@
   "langSet": "Language set to english!",
   "availableLang" : "Available languages: ",
 
-  "help_lang" : "!lang allows you to configure this bot's language.\nJust type !lang <lang>\nAvailable languages:",
+  "requiresToBeOp": "This command requires to be OP.",
+  "help": "IRC QuizzBot made with NodeJS. https://github.com/Outpox/QuizzBot\nAvailable commands:\n!start, !stop, !ask, !top, !stats, !say, !lang\nTo get help for a specific command: !help command\nEx: !help top",
+  "help_start": "Start the quizz if it's not running already.\nNo parameters.",
+  "help_stop": "Stop the quizz if it's running.\nNo parameters.",
+  "help_ask": "Force the quizz to ask the given question.\nTakes only one paramater which is the question ID.\nEx: !ask 23",
+  "help_top": "Display the user top list. If the user is OP !top is displayed in the channel, else trough PM to the user.\nTakes one optional parameter which is the max number of user to display.\nEx: !top\nOr: !top 5",
+  "help_stats": "Display your own stats in PM. Takes one optional parameter which is a user name of whom we want the stats.\nEx: !stats\nOr: !stats username",
+  "help_say": "Experimental. Force the bot to say the given message.\nEx: !say hello world",
+  "help_lang" : "Allows you to configure the bot's language.\nJust type !lang <lang>\nAvailable languages:",
 
-  "error_setLang_missingParam": "You need one argument..."
+  "error_setLang_missingParam": "You need one argument...",
+
+  "goodAnswer": "Good answer of %s",
+
+  "questionTag": "[Question] ",
+  "answerTag": "[Answer] ",
+  "tipTag": "[Tip] ",
+
+  "questionInQuizz": "I've got %s questions in my list!",
+  "nextQuestionIn": "Next question in %ss!",
+  "questionEndingIn": "Question ending in %ss!",
+  "noGoodAnswer": "No one found the good answer!",
+  "noMoreQuestion": "No more question to ask!",
+
+  "userStats": "User n°{{id}}\n{{name}} on {{channel}}: {{points}} points\n{{answers}} answers with {{goodAnswers}} good answers",
+  "topUser": "{{place}}. {{name}} : {{points}} points, {{ratio}}% of good answers\n",
+  "userDoesNotExists": "User %s doesn't exists"
 }
