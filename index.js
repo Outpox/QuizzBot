@@ -2,18 +2,44 @@
 
 const i18n = require('i18n');
 const QuizzBot = require('./class/quizzbot.js');
-const db = require('lokijs');
 
 i18n.configure({
     locales: ['fr', 'en'],
-    defaultLocale: 'fr',
+    defaultLocale: 'en',
     directory: 'lang/'
 });
 
-var options = {
-    timeBetweenQuestion: 15000,
-    nickServPassword: 'quizzbot'
-};
+//vv--------------------vv
+//REQUIRED CONFIGURATION//
 
-//new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#test-quizz'], ['../questions/airfrance.json'], {timeBetweenQuestion: 5000});
-new QuizzBot('62.210.236.193', 6697, true, 'WIP_QuizzBot', ['#quizz'], ['./questions/database.txt'], options);
+//Expected: String
+var serverAddress = '';
+
+//Expected: Integer
+var serverPort = 6697;
+
+//Expected: Boolean
+var usingSSL = true;
+
+//Expected: String
+var botNick = 'QuizzBot';
+
+//Expected: [String]
+var channelList = ['#quizz'];
+
+//Expected: [String] (relative path)
+var questionFiles = ['./question/database.txt'];
+//^^--------------------^^
+
+//vv--------------------vv
+//OPTIONAL CONFIGURATION//
+var options = {
+    //questionDuration: 25000,
+    //timeBetweenQuestion: 15000,
+    //timeBeforeTip: 10000,
+    //nickServPassword: '',
+    //continuousNoAnswer: 8,
+};
+//^^--------------------^^
+
+new QuizzBot(serverAddress, serverPort, usingSSL, botNick, channelList, questionFiles, options);
