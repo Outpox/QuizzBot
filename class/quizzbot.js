@@ -381,7 +381,7 @@ class QuizzBot {
             self.startCommand(user, to, message, true);
         }
         self.clearGame();
-        self.game(user, to, message,self.questions[args[0] - 1]);
+        self.game(user, to, message, self.questions[args[0] - 1]);
     }
 
     /**
@@ -451,12 +451,57 @@ class QuizzBot {
         }
         else {
             switch (args[0]) {
+                case 'start':
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('help_start'));
+                    break;
+                case 'stop':
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('requiresToBeOp'));
+                    self.ircBot.say(user.name, i18n.__('help_stop'));
+                    break;
+                case 'ask':
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('requiresToBeOp'));
+                    self.ircBot.say(user.name, i18n.__('help_ask'));
+                    break;
+                case 'lang':
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('requiresToBeOp'));
+                    var langArray = Object.keys(i18n.getCatalog());
+                    self.ircBot.say(user.name, i18n.__('help_lang'));
+                    var langs = "";
+                    langArray.forEach((lang, i)=> {
+                        if (i == langArray.length - 1) {
+                            langs += lang;
+                        }
+                        else {
+                            langs += lang + ", ";
+                        }
+                    });
+                    self.ircBot.say(user.name, langs);
+                    break;
                 case 'top':
-                    self.ircBot.say(user.name, i18n('help_top'));
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('help_top'));
+                    break;
+                case 'stats':
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('help_stats'));
+                    break;
+                case 'say':
+                    header(args[0]);
+                    self.ircBot.say(user.name, i18n.__('requiresToBeOp'));
+                    self.ircBot.say(user.name, i18n.__('help_say'));
+                    break;
+                default:
+                    self.ircBot.say(user.name, i18n.__('help'));
                     break;
             }
         }
-
+        function header(cmd) {
+            self.ircBot.say(user.name, '========== !' + cmd + ' ==========');
+        }
     }
 
     /**

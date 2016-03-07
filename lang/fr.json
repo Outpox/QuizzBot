@@ -13,6 +13,14 @@
   "langSet": "Langue changée en français !",
   "availableLang" : "Langues disponibles : ",
 
+  "requiresToBeOp": "Cette commande nécessite d'être OP.",
+  "help": "IRC QuizzBot fait avec NodeJS. https://github.com/Outpox/QuizzBot\nLes commandes disponibles sont:\n!start, !stop, !ask, !top, !stats, !say, !lang\nPour avoir de l'aide sur une commande faire: !help commande\nEx: !help top",
+  "help_start": "Permet de lancer le quizz si il n'est pas déjà lancé.\nNe prend pas d'argument",
+  "help_stop": "Perment d'arrêter le quizz si il est en cours.\nNe prend pas d'argument.",
+  "help_ask": "Permet de forcer le quizz à poser la question dont l'id est passé en paramètre.\nPrend un seul argument.\nEx: !ask 23",
+  "help_top": "Affiche les meilleurs joueurs. Si l'utilisateur est OP le résultat est affiché dans le channel, sinon en message privé avec le bot.\nAccepte un argument optionnel qui correspond au nombre max de joueurs à afficher.\nEx: !top\nOu: !top 5",
+  "help_stats": "Affiche ses propres statistiques en message privé. Accepte un argument optionnel qui est le nick d'un utilisateur dont on veut voir les statistiques.\nEx: !stats\nOu: !stats username",
+  "help_say": "Expérimental. Force le bot à dire le message passé en paramètre.\nEx: !say hello world",
   "help_lang" : "La commande !lang permet de configurer la langue de ce bot.\nIl suffit de faire !lang <lang>\nLes langues disponibles sont :",
 
   "error_setLang_missingParam": "Il faut un argument...",
