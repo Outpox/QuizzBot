@@ -1,6 +1,6 @@
 {
   "startingQuizz": "Starting Quizz !",
-  "requestedStartQuizz": " requested to start the Quizz",
+  "requestedStartQuizz": "%s requested to start the Quizz",
 
   "stoppingQuizz": "Stopping quizz!",
   "stoppingQuizzForInactivity" : "Stopped quizz for inactivity!",
