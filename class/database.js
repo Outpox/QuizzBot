@@ -15,6 +15,7 @@ class Database {
     }
 
     static getUserlist() {
+        delete require.cache[require.resolve('../data/userlist.json')];
         return require('../data/userlist.json');
     }
 }
