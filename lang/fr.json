@@ -1,10 +1,10 @@
 {
-  "startingQuizz" : "Démarrage du Quizz !",
-  "requestedStartQuizz" : "%s a demandé à démarrer le Quizz",
+  "startingQuizz" : "Démarrage du quizz !",
+  "requestedStartQuizz" : "%s a demandé à démarrer le quizz",
 
-  "stoppingQuizz" : "Arrêt du Quizz !",
+  "stoppingQuizz" : "Arrêt du quizz !",
   "stoppingQuizzForInactivity" : "Arrêt du Quizz pour cause d'inactivité !",
-  "requestedStopQuizz" : "%s a demandé à arrêter le Quizz",
+  "requestedStopQuizz" : "%s a demandé à arrêter le quizz",
 
   "standByMessage": "ヽ(◉◡◔)ﾉ SALUT JE SUIS QUIZZBOT JE SUIS UN BOT POUR FAIRE DES QUIZZ ヽ(◉◡◔)ﾉ",
 
@@ -15,7 +15,7 @@
 
   "requiresToBeOp": "Cette commande nécessite d'être OP.",
   "help": "IRC QuizzBot fait avec NodeJS. https://github.com/Outpox/QuizzBot\nLes commandes disponibles sont:\n!start, !stop, !ask, !top, !stats, !say, !lang\nPour avoir de l'aide sur une commande faire: !help commande\nEx: !help top",
-  "help_start": "Permet de lancer le quizz si il n'est pas déjà lancé.\nNe prend pas d'argument",
+  "help_start": "Permet de lancer le quizz si il n'est pas déjà lancé.\nNe prend pas d'argument.",
   "help_stop": "Perment d'arrêter le quizz si il est en cours.\nNe prend pas d'argument.",
   "help_ask": "Permet de forcer le quizz à poser la question dont l'id est passé en paramètre.\nPrend un seul argument.\nEx: !ask 23",
   "help_top": "Affiche les meilleurs joueurs. Si l'utilisateur est OP le résultat est affiché dans le channel, sinon en message privé avec le bot.\nAccepte un argument optionnel qui correspond au nombre max de joueurs à afficher.\nEx: !top\nOu: !top 5",
