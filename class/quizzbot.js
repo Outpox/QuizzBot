@@ -8,9 +8,6 @@ const Error = require('./error.js');
 const Database = require('./database.js');
 const Top = require('./top.js');
 
-var i = -1;
-var _db = new Database();
-
 class QuizzBot {
     /**
      * @param server {String} - Server address
@@ -233,6 +230,9 @@ class QuizzBot {
             case '!top':
                 self.topCommand(user, to, message, args);
                 break;
+            case '!help':
+                self.helpCommand(user, to, message, args);
+                break;
             case '!say':
                 self.sayCommand(user, to, message, args);
                 break;
@@ -442,6 +442,21 @@ class QuizzBot {
         else if (user.isOp(self, to)) {
             self.ircBot.say(to, topString);
         }
+    }
+
+    helpCommand(user, to, message, args) {
+        var self = this;
+        if (args[0] === undefined) {
+            self.ircBot.say(user.name, i18n.__('help'));
+        }
+        else {
+            switch (args[0]) {
+                case 'top':
+                    self.ircBot.say(user.name, i18n('help_top'));
+                    break;
+            }
+        }
+
     }
 
     /**
