@@ -92,7 +92,7 @@ class Question {
                 return questionList[id];
             }
             else {
-                this.getNextQuestion(questionList);
+                return this.getNextQuestion(questionList);
             }
         }
         else {
