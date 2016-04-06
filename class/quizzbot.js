@@ -69,7 +69,7 @@ class QuizzBot {
                 self.standByMessage();
                 self.ircBot.addListener('message', (from, to, message) => {
                     var user = User.getUser(from, to);
-                    if (from !== botName && message.length > 1 && message.charAt(0) === '!') {
+                    if (from !== botName && to !== botName && message.length > 1 && message.charAt(0) === '!') {
                         self.handleCommand(user, to, message);
                     }
                     else if (self.running && self.currentQuestion !== null && from !== botName) {
