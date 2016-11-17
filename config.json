@@ -1,0 +1,16 @@
+{
+    "lang": "en",
+    "serverAdress": "",
+    "serverPort": 6697,
+    "usingSSL": true,
+    "botNick": "QuizzBot",
+    "channelList": ["#quizz"],
+    "questionFiles": ["./questions/database.txt"],
+    "options": {
+        "questionDuration": 25000,
+        "timeBetweenQuestion": 15000,
+        "timeBeforeTip": 10000,
+        "nickServPassword": "",
+        "continuousNoAnswer": 8
+    }
+}
