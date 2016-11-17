@@ -1,45 +1,15 @@
 "use strict";
 
-const i18n = require('i18n');
-const QuizzBot = require('./class/quizzbot.js');
+const i18n = require('i18n'),
+      config = require('./config'),
+      QuizzBot = require('./class/quizzbot.js');
+
+let {lang, serverAddress, serverPort, usingSSL, botNick, channelList, questionFiles, options} = config;
 
 i18n.configure({
     locales: ['fr', 'en'],
-    defaultLocale: 'en',
+    defaultLocale: lang,
     directory: 'lang/'
 });
-
-//vv--------------------vv
-//REQUIRED CONFIGURATION//
-
-//Expected: String
-var serverAddress = '';
-
-//Expected: Integer
-var serverPort = 6697;
-
-//Expected: Boolean
-var usingSSL = true;
-
-//Expected: String
-var botNick = 'QuizzBot';
-
-//Expected: [String]
-var channelList = ['#quizz'];
-
-//Expected: [String] (relative path)
-var questionFiles = ['./questions/database.txt'];
-//^^--------------------^^
-
-//vv--------------------vv
-//OPTIONAL CONFIGURATION//
-var options = {
-    //questionDuration: 25000,
-    //timeBetweenQuestion: 15000,
-    //timeBeforeTip: 10000,
-    //nickServPassword: '',
-    //continuousNoAnswer: 8,
-};
-//^^--------------------^^
 
 new QuizzBot(serverAddress, serverPort, usingSSL, botNick, channelList, questionFiles, options);
