@@ -27,18 +27,16 @@ I suggest you to run it in a `screen`.
 * Channels to connect to
 * Questions files
 
-Edit `index.js` with whatever text editor you want, the code is commented.
+Edit the file `config.json` with whatever text editor you want.
 
 **Optional configuration:**
-Only un-comment the parameters you want to change. There are default values.
+The default values are already set in the file.
 
 * questionDuration : Question duration (in ms)
 * timeBetweenQuestion: Time between each question (in ms)
 * timeBeforeTip: Time before tip is displayed (in ms)
 * nickServPassword: Nickserv password (if your server uses nickserv and your bot name is registered, setting this will authenticate the bot on log in)
 * continuousNoAnswer: Amount of unanswered questions before the bot stops itself 
-
-You can also change the default language at line 9.
 
 ###Available commands
 * `!help`  
